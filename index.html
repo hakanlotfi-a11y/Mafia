@@ -1,0 +1,508 @@
+```html
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>راهنمای گرداننده | مافیا</title>
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --bg-2:#121216;
+    --bg-3:#17171d;
+    --line:#26262e;
+    --red:#c1121f;
+    --red-bright:#e63946;
+    --text:#e8e8ea;
+    --muted:#8b8b96;
+    --city:#3d7ea6;
+    --mafia:#c1121f;
+    --solo:#9b6bbf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"Vazirmatn","IRANSans",Tahoma,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.9;
+    min-height:100vh;
+    position:relative;
+    padding-bottom:60px;
+  }
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(193,18,31,.13), transparent 55%),
+      radial-gradient(ellipse at 50% 100%, rgba(193,18,31,.07), transparent 60%);
+    pointer-events:none;
+    z-index:0;
+  }
+  .wrap{max-width:820px;margin:0 auto;padding:0 16px;position:relative;z-index:1;}
+
+  /* ---------- HEADER ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(10,10,12,.88);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+    padding:16px 0 12px;
+  }
+  .brand{display:flex;align-items:center;gap:12px;}
+  .mark{
+    width:38px;height:38px;flex:0 0 38px;
+    border:1.5px solid var(--red);
+    border-radius:50%;
+    display:grid;place-items:center;
+    font-size:19px;
+    box-shadow:0 0 18px rgba(193,18,31,.45), inset 0 0 12px rgba(193,18,31,.2);
+    color:var(--red-bright);
+  }
+  h1{font-size:19px;font-weight:800;letter-spacing:.2px;}
+  h1 span{color:var(--red-bright);}
+  .sub{font-size:11.5px;color:var(--muted);letter-spacing:2.5px;margin-top:-4px;}
+
+  .tools{display:flex;gap:8px;margin-top:14px;}
+  #search{
+    flex:1;
+    background:var(--bg-2);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 13px;
+    color:var(--text);
+    font-family:inherit;
+    font-size:13.5px;
+    outline:none;
+    transition:.2s;
+  }
+  #search::placeholder{color:#5a5a66;}
+  #search:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(193,18,31,.16);}
+  .btn-sm{
+    background:var(--bg-2);
+    border:1px solid var(--line);
+    color:var(--muted);
+    border-radius:10px;
+    padding:0 12px;
+    font-family:inherit;
+    font-size:12px;
+    cursor:pointer;
+    transition:.2s;
+    white-space:nowrap;
+  }
+  .btn-sm:hover{border-color:var(--red);color:var(--red-bright);}
+
+  /* ---------- SECTION TITLES ---------- */
+  .sec-title{
+    display:flex;align-items:center;gap:10px;
+    margin:30px 0 14px;
+    font-size:13px;font-weight:700;
+    color:var(--muted);
+    letter-spacing:1px;
+  }
+  .sec-title::after{
+    content:"";flex:1;height:1px;
+    background:linear-gradient(to left,var(--line),transparent);
+  }
+  .sec-title i{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--red);
+    box-shadow:0 0 10px var(--red);
+    font-style:normal;
+  }
+
+  /* ---------- ROLE CARD ---------- */
+  .card{
+    background:linear-gradient(160deg,var(--bg-2),var(--bg-3));
+    border:1px solid var(--line);
+    border-radius:14px;
+    margin-bottom:10px;
+    overflow:hidden;
+    transition:border-color .25s, box-shadow .25s, transform .2s;
+  }
+  .card:hover{
+    border-color:rgba(193,18,31,.55);
+    box-shadow:0 0 0 1px rgba(193,18,31,.15), 0 8px 28px -12px rgba(193,18,31,.5);
+  }
+  .card.open{border-color:rgba(193,18,31,.5);}
+
+  .card-head{
+    width:100%;
+    background:none;border:none;
+    display:flex;align-items:center;gap:12px;
+    padding:14px 16px;
+    cursor:pointer;
+    font-family:inherit;
+    color:var(--text);
+    text-align:right;
+  }
+  .card-head:focus-visible{outline:2px solid var(--red-bright);outline-offset:-2px;}
+  .num{
+    font-size:11px;color:#4a4a55;font-weight:700;
+    min-width:16px;
+    font-variant-numeric:tabular-nums;
+  }
+  .rname{font-size:15.5px;font-weight:700;flex:1;}
+  .badge{
+    font-size:10.5px;font-weight:700;
+    padding:3px 10px;border-radius:20px;
+    border:1px solid;
+    letter-spacing:.5px;
+  }
+  .b-city{color:#7fb6d6;border-color:rgba(61,126,166,.55);background:rgba(61,126,166,.12);}
+  .b-mafia{color:#f0717c;border-color:rgba(193,18,31,.6);background:rgba(193,18,31,.14);}
+  .b-solo{color:#c39ae0;border-color:rgba(155,107,191,.55);background:rgba(155,107,191,.12);}
+  .chev{
+    color:#55555f;font-size:11px;transition:transform .3s;
+  }
+  .card.open .chev{transform:rotate(180deg);color:var(--red-bright);}
+
+  .card-body{
+    display:grid;grid-template-rows:0fr;
+    transition:grid-template-rows .32s ease;
+  }
+  .card.open .card-body{grid-template-rows:1fr;}
+  .card-inner{overflow:hidden;}
+  .card-pad{
+    padding:2px 16px 18px 16px;
+    border-top:1px solid rgba(38,38,46,.7);
+    margin-top:2px;
+    padding-top:14px;
+  }
+  .lead{font-size:13.5px;color:#c9c9d1;margin-bottom:14px;}
+
+  .lbl{
+    font-size:11px;font-weight:800;color:var(--red-bright);
+    letter-spacing:1px;margin-bottom:6px;
+    display:flex;align-items:center;gap:6px;
+  }
+  .lbl::before{content:"";width:12px;height:1.5px;background:var(--red);}
+  .ability{
+    background:rgba(193,18,31,.07);
+    border-right:2px solid var(--red);
+    border-radius:0 8px 8px 0;
+    padding:9px 12px;
+    font-size:13px;
+    color:#d8d8de;
+    margin-bottom:14px;
+  }
+  ul.tips{list-style:none;margin-bottom:14px;}
+  ul.tips li{
+    font-size:13px;color:#b9b9c3;
+    padding-right:16px;position:relative;
+    margin-bottom:5px;
+  }
+  ul.tips li::before{
+    content:"›";position:absolute;right:0;top:-1px;
+    color:var(--red);font-weight:700;
+  }
+  .mistake{
+    font-size:12.5px;color:#a8a8b3;
+    background:rgba(255,255,255,.03);
+    border:1px dashed var(--line);
+    border-radius:8px;
+    padding:8px 12px;
+  }
+  .mistake b{color:#f0717c;font-weight:700;}
+
+  /* ---------- NIGHT ORDER ---------- */
+  .steps{position:relative;padding-right:26px;}
+  .steps::before{
+    content:"";position:absolute;right:8px;top:6px;bottom:6px;
+    width:1px;background:linear-gradient(var(--red),rgba(193,18,31,.1));
+  }
+  .step{position:relative;margin-bottom:14px;}
+  .step::before{
+    content:"";position:absolute;right:-22px;top:7px;
+    width:9px;height:9px;border-radius:50%;
+    background:var(--bg);border:1.5px solid var(--red);
+    box-shadow:0 0 8px rgba(193,18,31,.7);
+  }
+  .step h4{font-size:13.5px;font-weight:700;margin-bottom:2px;}
+  .step p{font-size:12.5px;color:var(--muted);}
+  .quote{
+    display:block;
+    margin-top:5px;
+    font-size:12.5px;
+    color:#e0b8bc;
+    background:rgba(193,18,31,.08);
+    border-right:2px solid rgba(193,18,31,.5);
+    padding:5px 10px;
+    border-radius:0 6px 6px 0;
+  }
+
+  /* ---------- CHECKLIST ---------- */
+  .check{
+    display:flex;align-items:flex-start;gap:10px;
+    background:var(--bg-2);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 13px;
+    margin-bottom:7px;
+    cursor:pointer;
+    transition:.2s;
+    font-size:13px;
+  }
+  .check:hover{border-color:rgba(193,18,31,.4);}
+  .check input{display:none;}
+  .box{
+    width:17px;height:17px;flex:0 0 17px;
+    border:1.5px solid #3a3a44;border-radius:5px;
+    margin-top:5px;display:grid;place-items:center;
+    transition:.2s;font-size:11px;color:transparent;
+  }
+  .check input:checked ~ .box{
+    background:var(--red);border-color:var(--red);
+    color:#fff;box-shadow:0 0 12px rgba(193,18,31,.6);
+  }
+  .check input:checked ~ span.txt{color:#66666f;text-decoration:line-through;}
+
+  footer{
+    text-align:center;
+    font-size:11.5px;
+    color:#4e4e58;
+    margin-top:34px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+  }
+  .hidden{display:none !important;}
+  @media(max-width:480px){
+    h1{font-size:17px;}
+    .card-head{padding:13px 13px;}
+    .rname{font-size:14.5px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">
+      <div class="mark">♠</div>
+      <div>
+        <h1>راهنمای <span>گرداننده</span></h1>
+        <div class="sub">M A F I A · M A S T E R</div>
+      </div>
+    </div>
+    <div class="tools">
+      <input id="search" type="search" placeholder="جستجوی نقش… (مثلاً کارآگاه، شب، شهر)">
+      <button class="btn-sm" id="openAll">باز کردن همه</button>
+      <button class="btn-sm" id="closeAll">بستن</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="sec-title"><i></i> نقش‌ها</div>
+  <div id="roles"></div>
+
+  <div class="sec-title"><i></i> ترتیب شب</div>
+  <div class="steps">
+    <div class="step">
+      <h4>۱. بیدار کردن مافیا</h4>
+      <p>همه‌ی مافیاها چشم باز می‌کنند و با اشاره، هدف شب را انتخاب می‌کنند.</p>
+      <span class="quote">«مافیاها، چشم‌ها باز. با هم به توافق برسید و هدف را نشان بدهید.»</span>
+    </div>
+    <div class="step">
+      <h4>۲. پدرخوانده</h4>
+      <p>پدرخوانده هدف نهایی را تأیید یا تغییر می‌دهد. تصمیم او قطعی است.</p>
+      <span class="quote">«پدرخوانده، هدف نهایی را مشخص کن.»</span>
+    </div>
+    <div class="step">
+      <h4>۳. گروگان‌گیر</h4>
+      <p>یک بازیکن را گروگان می‌گیرد؛ آن بازیکن شب بعد نمی‌تواند رأی بدهد.</p>
+      <span class="quote">«گروگان‌گیر، گروگانت را انتخاب کن.»</span>
+    </div>
+    <div class="step">
+      <h4>۴. دکتر</h4>
+      <p>یک نفر را نجات می‌دهد. نجات خودش فقط یک بار در کل بازی مجاز است.</p>
+      <span class="quote">«دکتر، کی رو نجات می‌دی؟»</span>
+    </div>
+    <div class="step">
+      <h4>۵. کارآگاه</h4>
+      <p>یک نفر را استعلام می‌کند و گرداننده با علامت، تیم او را نشان می‌دهد.</p>
+      <span class="quote">«کارآگاه، استعلامت رو انجام بده.»</span>
+    </div>
+    <div class="step">
+      <h4>۶. تک‌تیرانداز</h4>
+      <p>یک نفر را هدف می‌گیرد. اگر مافیا نباشد، خودش حذف می‌شود.</p>
+      <span class="quote">«تک‌تیرانداز، شلیک می‌کنی یا نه؟»</span>
+    </div>
+    <div class="step">
+      <h4>۷. جادوگر</h4>
+      <p>توانایی یک نقش را برای همان شب باطل می‌کند.</p>
+      <span class="quote">«جادوگر، طلسمت رو بنداز.»</span>
+    </div>
+    <div class="step">
+      <h4>۸. رویاگردان</h4>
+      <p>یک نفر را به خواب می‌برد؛ آن شخص شب بعد توانایی ندارد.</p>
+      <span class="quote">«رویاگردان، کی رو به خواب می‌بری؟»</span>
+    </div>
+    <div class="step">
+      <h4>۹. مزدور</h4>
+      <p>هدفش را انتخاب می‌کند؛ اگر شرط قراردادش برآورده شود، برنده است.</p>
+      <span class="quote">«مزدور، قرارداد امشبت رو انتخاب کن.»</span>
+    </div>
+    <div class="step">
+      <h4>۱۰. جمع‌بندی و صبح</h4>
+      <p>گرداننده همه‌ی اثرها را هم‌زمان اعمال می‌کند، سپس صبح را اعلام می‌کند.</p>
+      <span class="quote">«شب تمام شد. چشم‌ها باز. صبح بخیر…»</span>
+    </div>
+  </div>
+
+  <div class="sec-title"><i></i> چک‌لیست گرداننده</div>
+  <div id="checklist"></div>
+
+  <footer>
+    قوانین دقیق نقش‌ها بین گروه‌ها متفاوت است — قبل از شروع، نسخه‌ی مورد توافق جمع را یک‌بار بلند بخوانید.
+  </footer>
+</main>
+
+<script>
+const ROLES = [
+  { n:"پدرخوانده", t:"mafia", tl:"مافیا",
+    d:"رئیس مافیا؛ تصمیم نهایی شب با اوست و در استعلام کارآگاه، شهروند نشان داده می‌شود.",
+    a:"هدف نهایی شب را تأیید یا تغییر می‌دهد. رأی او در تصمیم‌گیری مافیا وزن بیشتری دارد.",
+    tips:["تا آخر بازی خودت را شهروند جا بزن؛ سکوت زیاد هم لو می‌دهد.","در روز، بحث را به سمت بازیکن‌های پرسروصدا هدایت کن.","هیچ‌وقت مستقیم از هم‌تیمی‌هایت دفاع نکن."],
+    m:"اشتباه رایج: زیادی ساکت ماندن در روز اول — پدرخوانده‌ی خوب، شهروندِ معمولیِ بی‌حرف است، نه سایه." },
+
+  { n:"مافیای ساده", t:"mafia", tl:"مافیا",
+    d:"عضو عادی تیم مافیا؛ قدرت ویژه‌ای ندارد اما رأی و هماهنگی‌اش تعیین‌کننده است.",
+    a:"در شب با بقیه‌ی مافیا هم‌نظر می‌شود. اگر پدرخوانده حذف شود، رهبری به او می‌رسد.",
+    tips:["نقش شهروند ساده را بازی کن، نه نقش مافیا را.","در روز اول یک شهروند را هدف اتهام قرار بده.","مراقب باش استعلام نشوی؛ حرف اضافه نزن."],
+    m:"اشتباه رایج: حمایت آشکار از پدرخوانده در رأی‌گیری — این دقیقاً همان چیزی است که کارآگاه دنبالش است." },
+
+  { n:"دکتر", t:"city", tl:"شهر",
+    d:"هر شب یک نفر را از شلیک مافیا نجات می‌دهد. ستون شهر در شب.",
+    a:"یک بازیکن را نجات می‌دهد. نجات خودش فقط یک بار در کل بازی مجاز است.",
+    tips:["شب اول خودت را نجات بده — مافیا معمولاً سراغ نقش‌های مهم می‌رود.","الگوی نجاتت را قابل پیش‌بینی نکن.","اگر کسی را نجات دادی و صبح زنده بود، به او اعتماد نکن که حتماً شهروند است."],
+    m:"اشتباه رایج: هر شب خودت را نجات دادن — بعد از بار اول، هدر دادن توانایی است." },
+
+  { n:"کارآگاه", t:"city", tl:"شهر",
+    d:"هر شب یک نفر را استعلام می‌کند و تیم او را می‌فهمد. خطرناک‌ترین نقش برای مافیا.",
+    a:"استعلام یک بازیکن؛ گرداننده تیم او را با علامت نشان می‌دهد. پدرخوانده «شهروند» نشان داده می‌شود.",
+    tips:["تا وقتی نتیجه‌ی قطعی نداری، خودت را لو نده.","نتیجه را در روز با استدلال غیرمستقیم مطرح کن، نه با اعلام نقش.","اگر مافیا پیدا کردی، اول از همه یک شهروند قابل‌اعتماد را در جریان بگذار."],
+    m:"اشتباه رایج: اعلام زودهنگام نقش در روز دوم — همان شب حذف می‌شوی و اطلاعاتت با تو می‌رود." },
+
+  { n:"تک‌تیرانداز", t:"city", tl:"شهر",
+    d:"یک شلیک در کل بازی دارد. اگر مافیا را بزند، قهرمان است؛ اگر شهروند را بزند، خودش حذف می‌شود.",
+    a:"یک بار در کل بازی می‌تواند شبانه شلیک کند. شلیک به شهروند = حذف خودش.",
+    tips:["تا وقتی مطمئن نیستی، شلیک نکن — نگه‌داشتن گلوله هم قدرت است.","روز آخر، گلوله‌ات می‌تواند بازی را قطعی کند.","با کارآگاه هماهنگ شو تا شلیکت دقیق باشد."],
+    m:"اشتباه رایج: شلیک زودهنگام بر اساس حدس — این تنها نقشی است که با یک اشتباه، هم خودش و هم یک شهروند را از بازی بیرون می‌برد." },
+
+  { n:"شهروند ساده", t:"city", tl:"شهر",
+    d:"هیچ توانایی شبانه‌ای ندارد. تنها سلاحش استدلال، رأی و مشاهده است.",
+    a:"ندارد. فقط در بحث روز شرکت می‌کند و رأی می‌دهد.",
+    tips:["دقیق گوش کن؛ تناقض‌های حرف‌ها بهترین سرنخ است.","سؤال بپرس و بقیه را به حرف بکش.","رأی‌ات را الکی هدر نده؛ رأی تو همان قدرت توست."],
+    m:"اشتباه رایج: فکر کردن به اینکه «نقش مهمی ندارم» — شهروند ساده با استدلال درست، بازی را می‌برد." },
+
+  { n:"گروگان‌گیر", t:"solo", tl:"مستقل",
+    d:"نقش مستقل؛ هر شب یک نفر را گروگان می‌گیرد و او را از رأی دادن محروم می‌کند.",
+    a:"شبانه یک بازیکن را گروگان می‌گیرد؛ آن بازیکن در رأی‌گیری روز بعد نمی‌تواند رأی بدهد.",
+    tips:["گروگان گرفتن بازیکن‌های پرسروصدا، تعادل رأی‌ها را به نفع تو تغییر می‌دهد.","هدف برنده‌شدن تو معمولاً زنده ماندن تا مرحله‌ی مشخصی است — با گرداننده هماهنگ کن.","خودت را شهروند جا بزن و از گروگان‌گیری به‌عنوان اتهام استفاده کن."],
+    m:"اشتباه رایج: گروگان گرفتن یک نفر ثابت — الگو لو می‌رود و سریع شناسایی می‌شوی." },
+
+  { n:"جادوگر", t:"city", tl:"شهر",
+    d:"با طلسم، توانایی یک نقش را برای همان شب باطل می‌کند. نقش حساس و دو لبه.",
+    a:"شبانه یک بازیکن را طلسم می‌کند؛ توانایی او در همان شب اجرا نمی‌شود.",
+    tips:["اگر مطمئن نیستی، طلسم را نگه دار؛ طلسم اشتباه می‌تواند دکتر یا کارآگاه را زمین بزند.","با استدلال روز، حدس بزن مافیا کیست و همان شب طلسمش کن.","طلسم کارآگاه‌نما یا پدرخوانده معمولاً بی‌فایده است — هدف باید توانایی شبانه داشته باشد."],
+    m:"اشتباه رایج: طلسم کردن بازیکن‌های مشکوک بدون شواهد — بیشتر وقت‌ها به تیم شهر ضرر می‌زند." },
+
+  { n:"رویاگردان", t:"city", tl:"شهر",
+    d:"یک نفر را به خواب می‌برد؛ آن شخص شب بعد از توانایی‌اش محروم می‌شود.",
+    a:"شبانه یک بازیکن را به خواب می‌برد؛ او در شب بعد نمی‌تواند از توانایی‌اش استفاده کند.",
+    tips:["هدف خوب، مافیایی است که توانایی شبانه دارد.","در روز از خواب‌آلودگی به‌عنوان نشانه استفاده نکن — لو می‌روی.","با کارآگاه هماهنگ باش تا خواب روی هدف درست بیفتد."],
+    m:"اشتباه رایج: خواب کردن بازیکن‌های تصادفی — این نقش با هدف‌گیری دقیق ارزش دارد، نه با شانس." },
+
+  { n:"مزدور", t:"solo", tl:"مستقل",
+    d:"نقش مستقل با قرارداد؛ برای رسیدن به هدفش با هر تیمی که لازم باشد همکاری می‌کند.",
+    a:"شبانه هدف قراردادش را انتخاب می‌کند. اگر شرط قرارداد برآورده شود، برنده است.",
+    tips:["قراردادت را با گرداننده دقیق مشخص کن؛ شرط باید روشن و قابل‌سنجش باشد.","به هر دو تیم نزدیک شو و اعتماد بساز، اما به هیچ‌کدام وفادار نمان.","روز آخر، مزدور معمولاً تعیین‌کننده است — رأی‌ات را گران بفروش."],
+    m:"اشتباه رایج: لو دادن زودهنگام نقش مستقل — در آن لحظه هر دو تیم تو را تهدید می‌بینند." }
+];
+
+const CHECKS = [
+  "تعداد بازیکن‌ها و نقش‌ها را با هم هماهنگ کردم",
+  "همه نقش‌ها را یک‌بار بلند خواندم و قوانین را تأیید کردم",
+  "ترتیب شب را روی کاغذ نوشتم",
+  "علامت‌های گرداننده (بله/خیر/تیم) را با بازیکن‌ها تمرین کردم",
+  "تعداد مافیا با تعداد بازیکن‌ها متناسب است",
+  "قانون نجات خود دکتر را اعلام کردم",
+  "شرط برنده‌شدن نقش‌های مستقل را مشخص کردم",
+  "محل نشستن بازیکن‌ها را ثابت کردم",
+  "زمان هر مرحله‌ی روز را تعیین کردم",
+  "قانون رأی‌گیری و تساوی را توضیح دادم"
+];
+
+const rolesEl = document.getElementById('roles');
+ROLES.forEach((r,i)=>{
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.search = (r.n+" "+r.tl+" "+r.d+" "+r.a+" "+r.tips.join(" ")).toLowerCase();
+  card.innerHTML = `
+    <button class="card-head" aria-expanded="false">
+      <span class="num">${String(i+1).padStart(2,'0')}</span>
+      <span class="rname">${r.n}</span>
+      <span class="badge b-${r.t}">${r.tl}</span>
+      <span class="chev">▼</span>
+    </button>
+    <div class="card-body">
+      <div class="card-inner">
+        <div class="card-pad">
+          <p class="lead">${r.d}</p>
+          <div class="lbl">توانایی شبانه</div>
+          <div class="ability">${r.a}</div>
+          <div class="lbl">نکته‌های بازی</div>
+          <ul class="tips">${r.tips.map(t=>`<li>${t}</li>`).join('')}</ul>
+          <div class="mistake"><b>${r.m.split(':')[0]}:</b>${r.m.split(':').slice(1).join(':')}</div>
+        </div>
+      </div>
+    </div>`;
+  const head = card.querySelector('.card-head');
+  head.addEventListener('click', ()=>{
+    const open = card.classList.toggle('open');
+    head.setAttribute('aria-expanded', open);
+  });
+  rolesEl.appendChild(card);
+});
+
+document.getElementById('openAll').onclick = ()=>{
+  document.querySelectorAll('.card').forEach(c=>{
+    c.classList.add('open');
+    c.querySelector('.card-head').setAttribute('aria-expanded','true');
+  });
+};
+document.getElementById('closeAll').onclick = ()=>{
+  document.querySelectorAll('.card').forEach(c=>{
+    c.classList.remove('open');
+    c.querySelector('.card-head').setAttribute('aria-expanded','false');
+  });
+};
+
+document.getElementById('search').addEventListener('input', e=>{
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll('.card').forEach(c=>{
+    c.classList.toggle('hidden', q && !c.dataset.search.includes(q));
+  });
+});
+
+const clEl = document.getElementById('checklist');
+CHECKS.forEach((txt,i)=>{
+  const label = document.createElement('label');
+  label.className='check';
+  label.innerHTML = `<input type="checkbox" data-i="${i}"><span class="box">✓</span><span class="txt">${txt}</span>`;
+  clEl.appendChild(label);
+});
+const saved = JSON.parse(localStorage.getItem('mafia_check')||'[]');
+clEl.querySelectorAll('input').forEach(inp=>{
+  inp.checked = saved.includes(+inp.dataset.i);
+  inp.addEventListener('change', ()=>{
+    const on = [...clEl.querySelectorAll('input')].filter(x=>x.checked).map(x=>+x.dataset.i);
+    localStorage.setItem('mafia_check', JSON.stringify(on));
+  });
+});
+</script>
+</body>
+</html>
